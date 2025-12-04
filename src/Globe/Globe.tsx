@@ -1,5 +1,6 @@
 import {
-    Viewer as CesiumViewer
+    Viewer as CesiumViewer,
+    JulianDate
 } from "cesium";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -7,13 +8,28 @@ import {
     Viewer,
     type CesiumComponentRef
 } from "resium";
+import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
+import type { SpaceObject } from '../types/spaceObject';
+import { propagateKepler } from '../utils/propagation-helper';
 import Entities from './Entities';
 
 const Globe : React.FC = () => {
       const viewerRef = useRef<CesiumComponentRef<CesiumViewer> | null>(null);
 
+ const handleFocusSatellite = (so: SpaceObject) => {
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer) return;
 
+    const currentTime = viewer.clock.currentTime;
+    const jsDate = JulianDate.toDate(currentTime);
 
+    const position = propagateKepler(so, jsDate);
+
+    viewer.camera.flyTo({
+      destination: position,
+      duration: 1.5
+    });
+  };
 
 useEffect(() => {
 const viewer = viewerRef.current?.cesiumElement;
@@ -50,6 +66,35 @@ const [showPropagation, setShowPropagation] = useState<boolean>(false);
           />
           Afficher les propagations
         </label>
+
+<div style={{ fontWeight: 600, marginBottom: 4 }}>
+          Focus sur un objet :
+        </div>
+
+        {/* Liste de boutons satellites */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {mockSpaceObjects.map(so => (
+            <button
+              key={so.id}
+              onClick={() => handleFocusSatellite(so)}
+              style={{
+                textAlign: "left",
+                padding: "4px 6px",
+                borderRadius: 4,
+                border: "1px solid rgba(255,255,255,0.25)",
+                background: "rgba(20,20,20,0.9)",
+                color: "white",
+                cursor: "pointer",
+                fontSize: 12
+              }}
+            >
+              {so.name}
+            </button>
+          ))}
+        </div>
+
+
+
       </div>
     <Viewer ref={viewerRef} full>
       <Entities showPropagation={showPropagation}/>
