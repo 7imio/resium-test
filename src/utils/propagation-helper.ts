@@ -2,9 +2,9 @@ import { Cartesian3 } from 'cesium';
 import type { SpaceObject } from '../types/spaceObject';
 
 // constante gravit. standard de la terre en km3/s2 (valeurs classiques de mécaspa)
-const MU_EARTH_KM3_S2 = 398600.4418;
-const DEG2RAD = Math.PI /180;
-const TWO_PI = 2* Math.PI;
+export const MU_EARTH_KM3_S2 = 398600.4418;
+export const DEG2RAD = Math.PI /180;
+export const TWO_PI = 2* Math.PI;
 
 const normalizeAngleRad =(angle:number) => {
     let a = angle%TWO_PI;
@@ -113,4 +113,11 @@ export const propagateKepler=(spaceObject: SpaceObject, date: Date): Cartesian3 
   const zMeters = zKm * 1000;
 
   return new Cartesian3(xMeters, yMeters, zMeters);
+}
+
+export const  computeOrbitalPeriodSeconds=(semiMajorAxisKm: number): number=>{
+  const a = semiMajorAxisKm;
+  const n = Math.sqrt(MU_EARTH_KM3_S2 / (a * a * a)); // rad/s
+  const T = TWO_PI / n;
+  return T;
 }
