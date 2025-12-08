@@ -35,10 +35,11 @@ const SpaceOjectsPropagagions:React.FC<SpaceObjectsPropagationsProps> = ({so}) =
     return <Entity 
             polyline={{
                 positions: orbitPositions,
-                width: 4,
-                material: Color.fromAlpha(orbitColor, 0.5)
+                width: 2,
+                material: Color.fromAlpha(orbitColor, 0.3)
             }}
-    />
+            />
+
 
 }
 export default SpaceOjectsPropagagions

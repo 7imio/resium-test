@@ -7,7 +7,7 @@ import {
   NearFarScalar
 } from "cesium";
 import React from "react";
-import { Entity } from "resium";
+import { Entity, PathGraphics } from "resium";
 import type { SpaceObject } from "../types/spaceObject";
 import { getOrbitColor, propagateKepler } from "../utils/propagation-helper";
 
@@ -37,6 +37,7 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
     [so]
   );
   
+const color = getOrbitColor(so.orbitType);
 
   return (
     <Entity
@@ -48,7 +49,7 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
         uri:`/Satellites/${so.orbitType as string}.gltf`,
         scale:5,
         minimumPixelSize:32,
-        color:getOrbitColor(so.orbitType)
+        color
     }}
 
       
@@ -63,7 +64,9 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
         }}
 
       description={so.description}
-    />
+    > 
+    <PathGraphics show={true} leadTime={60*20} trailTime={60*10} width={4} material={color}/>
+    </Entity>
   );
 };
 
