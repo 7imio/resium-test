@@ -20,7 +20,7 @@ const normalizeAngleRad =(angle:number) => {
 const solveKepler =(M:number, e:number, maxIter=50, tol = 1e-10):number=>{
     M = normalizeAngleRad(M);
 
-    let E = M;
+    let E;
     if (e>0.8){
         // meilleure initialisation pour les orbites très excentriques
         E = Math.PI;
@@ -31,7 +31,7 @@ const solveKepler =(M:number, e:number, maxIter=50, tol = 1e-10):number=>{
 
     for (let i = 0; i< maxIter; i++){
         const f = E-e*Math.sin(E)-M;
-        const fPrime = 1-e*Math.cos(e);
+        const fPrime = 1 - e * Math.cos(E);
         const delta = f / fPrime;
         E-=delta;
         if (Math.abs(delta)<tol){
@@ -136,3 +136,18 @@ export const getOrbitColor=(orbitType: SpaceObject["orbitType"]): Color=> {
             return Color.WHITE;
         }
     }
+
+  export const getRecommendedStepSeconds =(so: SpaceObject): number => {
+  switch (so.orbitType) {
+    case "LEO":
+      return 600;   // 10 min
+    case "MEO":
+      return 1200;  // 20 min
+    case "HEO":
+      return 600;   // 10 min pour mieux gérer les grosses excentricités
+    case "GEO":
+      return 3600;  // 1 h
+    default:
+      return 1800;
+  }
+}

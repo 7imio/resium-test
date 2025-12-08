@@ -8,8 +8,8 @@ interface EntitiesProps{
 
 const Entities: React.FC<EntitiesProps> = ({showPropagation}) => {
   return <>
-  {mockSpaceObjects.map(so => <SpaceObjectVisualization key={so.id} so={so} />)}
-  {showPropagation && mockSpaceObjects.map(so=> <SpaceObjectsPropagations so={so} />)}
+  {mockSpaceObjects.map(so => <SpaceObjectVisualization key={`visu-${so.id}`} so={so} />)}
+  {showPropagation && mockSpaceObjects.map(so=> <SpaceObjectsPropagations key={`propa-${so.id}`} so={so} />)}
   </>  
 
   ;

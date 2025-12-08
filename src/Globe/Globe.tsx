@@ -64,9 +64,7 @@ const [showPropagation, setShowPropagation] = useState<boolean>(false);
             type="checkbox"
             checked={showPropagation}
             onChange={e => setShowPropagation(e.target.checked)}
-            style={{ marginRight: 6 }}
-          />
-          Afficher les propagations
+            style={{ marginRight: 6 }} /> Afficher les propagations
         </label>
 
 <div style={{ fontWeight: 600, marginBottom: 4 }}>

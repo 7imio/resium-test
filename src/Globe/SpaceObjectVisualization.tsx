@@ -1,7 +1,6 @@
 import {
   CallbackPositionProperty,
   Cartesian2,
-  Cartesian3,
   Color,
   JulianDate,
   NearFarScalar
@@ -20,16 +19,16 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
   const positionProperty = React.useMemo(
     () =>
       new CallbackPositionProperty((time, result) => {
-        if (!time) return result as Cartesian3 | undefined;
+        if (!time) return result;
 
-        const jsDate = JulianDate.toDate(time as JulianDate);
+        const jsDate = JulianDate.toDate(time);
         const pos = propagateKepler(so, jsDate);
 
         if (result) {
-          (result as Cartesian3).x = pos.x;
-          (result as Cartesian3).y = pos.y;
-          (result as Cartesian3).z = pos.z;
-          return result as Cartesian3;
+          (result).x = pos.x;
+          (result).y = pos.y;
+          (result).z = pos.z;
+          return result;
         }
 
         return pos;
