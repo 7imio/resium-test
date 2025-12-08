@@ -1,4 +1,5 @@
 import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
+import SpaceObjectsPropagations from './SpaceObjectsPropagations';
 import SpaceObjectVisualization from './SpaceObjectVisualization';
 
 interface EntitiesProps{
@@ -6,7 +7,11 @@ interface EntitiesProps{
 }
 
 const Entities: React.FC<EntitiesProps> = ({showPropagation}) => {
-    return mockSpaceObjects.map(so => <SpaceObjectVisualization key={so.id} so={so} showPropagation={showPropagation} />)
+  return <>
+  {mockSpaceObjects.map(so => <SpaceObjectVisualization key={so.id} so={so} />)}
+  {showPropagation && mockSpaceObjects.map(so=> <SpaceObjectsPropagations so={so} />)}
+  </>  
+
   ;
 };
 

@@ -1,35 +1,37 @@
 import {
-    Viewer as CesiumViewer,
-    JulianDate
+  Viewer as CesiumViewer,
+  Entity,
 } from "cesium";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import {
-    Viewer,
-    type CesiumComponentRef
+  Viewer,
+  type CesiumComponentRef
 } from "resium";
 import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
 import type { SpaceObject } from '../types/spaceObject';
-import { propagateKepler } from '../utils/propagation-helper';
 import Entities from './Entities';
 
 const Globe : React.FC = () => {
       const viewerRef = useRef<CesiumComponentRef<CesiumViewer> | null>(null);
 
+      const [selectedEntity, setSelectedEntity] = useState<Entity|undefined>(undefined);
+
  const handleFocusSatellite = (so: SpaceObject) => {
     const viewer = viewerRef.current?.cesiumElement;
     if (!viewer) return;
 
-    const currentTime = viewer.clock.currentTime;
-    const jsDate = JulianDate.toDate(currentTime);
 
-    const position = propagateKepler(so, jsDate);
 
-    viewer.camera.flyTo({
-      destination: position,
-      duration: 1.5
-    });
-  };
+const entity = viewer.entities.getById(so.id); // adapte selon ta structure
+  if (!entity) {
+    console.warn("Aucune entité trouvée pour", so.id);
+    return;
+  }
+
+  setSelectedEntity(entity)
+  }
+
 
 useEffect(() => {
 const viewer = viewerRef.current?.cesiumElement;
@@ -73,6 +75,7 @@ const [showPropagation, setShowPropagation] = useState<boolean>(false);
 
         {/* Liste de boutons satellites */}
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          
           {mockSpaceObjects.map(so => (
             <button
               key={so.id}
@@ -96,7 +99,7 @@ const [showPropagation, setShowPropagation] = useState<boolean>(false);
 
 
       </div>
-    <Viewer ref={viewerRef} full>
+    <Viewer ref={viewerRef} full trackedEntity={selectedEntity}>
       <Entities showPropagation={showPropagation}/>
     </Viewer>
 </>

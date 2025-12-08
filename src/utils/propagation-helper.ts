@@ -1,4 +1,4 @@
-import { Cartesian3 } from 'cesium';
+import { Cartesian3, Color } from 'cesium';
 import type { SpaceObject } from '../types/spaceObject';
 
 // constante gravit. standard de la terre en km3/s2 (valeurs classiques de mécaspa)
@@ -121,3 +121,18 @@ export const  computeOrbitalPeriodSeconds=(semiMajorAxisKm: number): number=>{
   const T = TWO_PI / n;
   return T;
 }
+
+export const getOrbitColor=(orbitType: SpaceObject["orbitType"]): Color=> {
+        switch (orbitType) {
+            case "LEO":
+            return Color.LIME;
+            case "MEO":
+            return Color.ORANGE;
+            case "HEO":
+            return Color.MAGENTA;
+            case "GEO":
+            return Color.CYAN;
+            default:
+            return Color.WHITE;
+        }
+    }
