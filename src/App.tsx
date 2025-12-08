@@ -1,8 +1,8 @@
-import './App.css'
-import Globe from './Globe/Globe'
+import './App.css';
+import Globe from './Globe/Globe';
 
 function App() {
-  return <Globe />
+  return <Globe />;
 }
 
-export default App
+export default App;

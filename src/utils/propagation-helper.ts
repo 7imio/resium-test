@@ -3,43 +3,43 @@ import type { SpaceObject } from '../types/spaceObject';
 
 // constante gravit. standard de la terre en km3/s2 (valeurs classiques de mécaspa)
 export const MU_EARTH_KM3_S2 = 398600.4418;
-export const DEG2RAD = Math.PI /180;
-export const TWO_PI = 2* Math.PI;
+export const DEG2RAD = Math.PI / 180;
+export const TWO_PI = 2 * Math.PI;
 
-const normalizeAngleRad =(angle:number) => {
-    let a = angle%TWO_PI;
-    if (a<0) a+= TWO_PI;
-    return a;
-}
+const normalizeAngleRad = (angle: number) => {
+  let a = angle % TWO_PI;
+  if (a < 0) a += TWO_PI;
+  return a;
+};
 
 /**
  * résout l'équation de Kepler pour obtenir l'excentric anomaly E
  * à partir de la mean anomaly M et de l'excentricité e
  * Methode Newton-Raphson
  */
-const solveKepler =(M:number, e:number, maxIter=50, tol = 1e-10):number=>{
-    M = normalizeAngleRad(M);
+const solveKepler = (M: number, e: number, maxIter = 50, tol = 1e-10): number => {
+  M = normalizeAngleRad(M);
 
-    let E;
-    if (e>0.8){
-        // meilleure initialisation pour les orbites très excentriques
-        E = Math.PI;
-    } else {
-        // approximation classique
-        E = M+e*Math.sin(M) * (1+e*Math.cos(M));
-    }
+  let E;
+  if (e > 0.8) {
+    // meilleure initialisation pour les orbites très excentriques
+    E = Math.PI;
+  } else {
+    // approximation classique
+    E = M + e * Math.sin(M) * (1 + e * Math.cos(M));
+  }
 
-    for (let i = 0; i< maxIter; i++){
-        const f = E-e*Math.sin(E)-M;
-        const fPrime = 1 - e * Math.cos(E);
-        const delta = f / fPrime;
-        E-=delta;
-        if (Math.abs(delta)<tol){
-            break;
-        }
+  for (let i = 0; i < maxIter; i++) {
+    const f = E - e * Math.sin(E) - M;
+    const fPrime = 1 - e * Math.cos(E);
+    const delta = f / fPrime;
+    E -= delta;
+    if (Math.abs(delta) < tol) {
+      break;
     }
-    return normalizeAngleRad(E);
-}
+  }
+  return normalizeAngleRad(E);
+};
 
 /**
  * Propage un objet spatial selon un modèle képlérien simple.
@@ -48,16 +48,8 @@ const solveKepler =(M:number, e:number, maxIter=50, tol = 1e-10):number=>{
  * @param date La date pour laquelle on veut la position
  * @returns Position en Cartesian3 (mètres), dans un référentiel Terre-centré inertiel approx.
  */
-export const propagateKepler=(spaceObject: SpaceObject, date: Date): Cartesian3 =>{
-  const {
-    semiMajorAxisKm: a,
-    eccentricity: e,
-    inclinationDeg,
-    raanDeg,
-    argOfPerigeeDeg,
-    meanAnomalyDegAtEpoch,
-    epochIso
-  } = spaceObject;
+export const propagateKepler = (spaceObject: SpaceObject, date: Date): Cartesian3 => {
+  const { semiMajorAxisKm: a, eccentricity: e, inclinationDeg, raanDeg, argOfPerigeeDeg, meanAnomalyDegAtEpoch, epochIso } = spaceObject;
 
   // 1. Temps écoulé depuis l'époque (en secondes)
   const epochDate = new Date(epochIso);
@@ -113,41 +105,41 @@ export const propagateKepler=(spaceObject: SpaceObject, date: Date): Cartesian3 
   const zMeters = zKm * 1000;
 
   return new Cartesian3(xMeters, yMeters, zMeters);
-}
+};
 
-export const  computeOrbitalPeriodSeconds=(semiMajorAxisKm: number): number=>{
+export const computeOrbitalPeriodSeconds = (semiMajorAxisKm: number): number => {
   const a = semiMajorAxisKm;
   const n = Math.sqrt(MU_EARTH_KM3_S2 / (a * a * a)); // rad/s
   const T = TWO_PI / n;
   return T;
-}
+};
 
-export const getOrbitColor=(orbitType: SpaceObject["orbitType"]): Color=> {
-        switch (orbitType) {
-            case "LEO":
-            return Color.LIME;
-            case "MEO":
-            return Color.ORANGE;
-            case "HEO":
-            return Color.MAGENTA;
-            case "GEO":
-            return Color.CYAN;
-            default:
-            return Color.WHITE;
-        }
-    }
+export const getOrbitColor = (orbitType: SpaceObject['orbitType']): Color => {
+  switch (orbitType) {
+    case 'LEO':
+      return Color.LIME;
+    case 'MEO':
+      return Color.ORANGE;
+    case 'HEO':
+      return Color.MAGENTA;
+    case 'GEO':
+      return Color.CYAN;
+    default:
+      return Color.WHITE;
+  }
+};
 
-  export const getRecommendedStepSeconds =(so: SpaceObject): number => {
+export const getRecommendedStepSeconds = (so: SpaceObject): number => {
   switch (so.orbitType) {
-    case "LEO":
-      return 600;   // 10 min
-    case "MEO":
-      return 1200;  // 20 min
-    case "HEO":
-      return 600;   // 10 min pour mieux gérer les grosses excentricités
-    case "GEO":
-      return 3600;  // 1 h
+    case 'LEO':
+      return 600; // 10 min
+    case 'MEO':
+      return 1200; // 20 min
+    case 'HEO':
+      return 600; // 10 min pour mieux gérer les grosses excentricités
+    case 'GEO':
+      return 3600; // 1 h
     default:
       return 1800;
   }
-}
+};

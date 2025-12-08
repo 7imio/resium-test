@@ -1,23 +1,31 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
+// eslint.config.mjs
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 
-export default defineConfig([
-  globalIgnores(['dist']),
+export default [
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
+    files: ['**/*.ts'],
+
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: tsparser,
+      sourceType: 'module',
+    },
+
+    plugins: {
+      '@typescript-eslint': tseslint,
+      prettier: prettierPlugin,
+    },
+
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      ...prettierConfig.rules,
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-console': 'warn',
+      semi: ['error', 'always'],
+      quotes: ['error', 'double'],
+      'prettier/prettier': 'error',
     },
   },
-])
+];
