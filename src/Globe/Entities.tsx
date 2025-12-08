@@ -1,4 +1,5 @@
 import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
+import PropagationWaypointsVisualization from './PropagationWaypointsVisualisation';
 import SpaceObjectsPropagations from './SpaceObjectsPropagations';
 import SpaceObjectVisualization from './SpaceObjectVisualization';
 
@@ -13,6 +14,9 @@ const Entities: React.FC<EntitiesProps> = ({ showPropagation }) => {
         <SpaceObjectVisualization key={`visu-${so.id}`} so={so} />
       ))}
       {showPropagation && mockSpaceObjects.map((so) => <SpaceObjectsPropagations key={`propa-${so.id}`} so={so} />)}
+      {mockSpaceObjects.map((so) => (
+        <PropagationWaypointsVisualization so={so} stepMinutes={30} durationHours={24} />
+      ))}
     </>
   );
 };
