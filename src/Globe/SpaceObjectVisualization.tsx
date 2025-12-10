@@ -12,9 +12,8 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
   const positionProperty = React.useMemo(
     () =>
       new CallbackPositionProperty((time, result) => {
-        if (!time) return result;
+        const jsDate = time ? JulianDate.toDate(time) : new Date(so.epochIso);
 
-        const jsDate = JulianDate.toDate(time);
         const pos = propagateKepler(so, jsDate);
 
         if (result) {
@@ -46,7 +45,7 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
       label={{
         text: so.name,
         font: '16px sans-serif',
-        fillColor: Color.ALICEBLUE,
+        fillColor: Color.WHITE,
         outlineColor: Color.BLACK,
         outlineWidth: 4,
         pixelOffset: new Cartesian2(20, -20),

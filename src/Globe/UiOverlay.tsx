@@ -19,7 +19,6 @@ const UiOverlay: React.FC<UiOverlayProps> = ({ showPropagation, setShowPropagati
     const viewer = viewerRef.current.cesiumElement;
     if (!viewer) return;
     viewer.scene.debugShowFramesPerSecond = showDebug;
-    viewer.scene.debugShowCommands = showDebug;
   }, [showDebug]);
 
   return (
