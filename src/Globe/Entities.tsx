@@ -15,7 +15,7 @@ const Entities: React.FC<EntitiesProps> = ({ showPropagation }) => {
       ))}
       {showPropagation && mockSpaceObjects.map((so) => <SpaceObjectsPropagations key={`propa-${so.id}`} so={so} />)}
       {mockSpaceObjects.map((so) => (
-        <PropagationWaypointsVisualization so={so} stepMinutes={30} durationHours={24} />
+        <PropagationWaypointsVisualization key={`visu-${so.id}`} so={so} stepMinutes={30} durationHours={24} />
       ))}
     </>
   );

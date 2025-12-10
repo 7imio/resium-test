@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/utils/orbitSampling.ts
 import { Cartesian3 } from 'cesium';
 import type { SpaceObject } from '../types/spaceObject';

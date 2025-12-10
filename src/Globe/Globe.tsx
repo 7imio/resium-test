@@ -2,6 +2,7 @@ import { Viewer as CesiumViewer, Entity, MapMode2D } from 'cesium';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Viewer, type CesiumComponentRef } from 'resium';
+import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
 import type { SpaceObject } from '../types/spaceObject';
 import Entities from './Entities';
 import InfoPanel from './InfoPanel';
@@ -40,6 +41,14 @@ const Globe: React.FC = () => {
       if (!prev) return entity;
       if (prev.id === entity.id) return undefined;
       return entity;
+    });
+
+    const currentSpaceObject = mockSpaceObjects.find((so) => so.id === entity.id);
+
+    setSpaceObject((prev: SpaceObject | undefined) => {
+      if (!prev) return currentSpaceObject;
+      if (prev.id === entity.id) return undefined;
+      return currentSpaceObject;
     });
   };
 
