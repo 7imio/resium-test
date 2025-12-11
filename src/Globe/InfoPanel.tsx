@@ -24,10 +24,25 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ selectedEntity, spaceObject }) =>
         background: 'rgba(0,0,0,0.6)',
         color: 'white',
         fontSize: 14,
-        width: '10rem',
+        width: '15rem',
       }}
     >
-      <p>PLOP</p>
+      {spaceObject && (
+        <>
+          <div>
+            <strong>{spaceObject.name}</strong>
+          </div>
+          <hr />
+          <div>Description: {spaceObject.description}</div>
+          <div>Demi grand axe: {spaceObject.semiMajorAxisKm} kg</div>
+          <div>Eccentricité: {spaceObject.eccentricity} m</div>
+          <div>Inclinaison: {spaceObject.inclinationDeg} °</div>
+          <div>RAAN: {spaceObject.raanDeg} °</div>
+          <div>Arg. du périgée: {spaceObject.argOfPerigeeDeg} °</div>
+          <div>Anomalie moyenne à l'époque: {spaceObject.meanAnomalyDegAtEpoch} °</div>
+          <div>Époque: {spaceObject.epochIso}</div>
+        </>
+      )}
     </div>
   );
 };
