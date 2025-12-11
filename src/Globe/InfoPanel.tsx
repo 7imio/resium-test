@@ -1,16 +1,39 @@
 import type { Entity } from 'cesium';
-import { useEffect } from 'react';
 import type { SpaceObject } from '../types/spaceObject';
+import type { TimeUnit } from '../utils/globe-helper';
+
+interface PropagationUiParams {
+  startIso: string;
+  endIso: string;
+  stepValue: number;
+  stepUnit: TimeUnit;
+}
 
 interface InfoPanelProps {
   selectedEntity: Entity | undefined;
   spaceObject: SpaceObject | undefined;
+
+  showOrbit: boolean;
+  showPoints: boolean;
+  onToggleOrbit: (show: boolean) => void;
+  onTogglePoints: (show: boolean) => void;
+
+  propagationParams: PropagationUiParams | undefined;
+  onChangePropagationParams: (params: PropagationUiParams) => void;
 }
 
-const InfoPanel: React.FC<InfoPanelProps> = ({ selectedEntity, spaceObject }) => {
-  useEffect(() => {
-    console.log({ spaceObject, selectedEntity });
-  }, [spaceObject, selectedEntity]);
+const InfoPanel: React.FC<InfoPanelProps> = ({
+  spaceObject,
+  showOrbit,
+  showPoints,
+  onToggleOrbit,
+  onTogglePoints,
+  propagationParams,
+  onChangePropagationParams,
+}) => {
+  if (!spaceObject) {
+    return null;
+  }
 
   return (
     <div
@@ -24,24 +47,109 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ selectedEntity, spaceObject }) =>
         background: 'rgba(0,0,0,0.6)',
         color: 'white',
         fontSize: 14,
-        width: '15rem',
+        width: '18rem',
       }}
     >
-      {spaceObject && (
-        <>
-          <div>
-            <strong>{spaceObject.name}</strong>
-          </div>
-          <hr />
-          <div>Description: {spaceObject.description}</div>
-          <div>Demi grand axe: {spaceObject.semiMajorAxisKm} kg</div>
-          <div>Eccentricité: {spaceObject.eccentricity} m</div>
-          <div>Inclinaison: {spaceObject.inclinationDeg} °</div>
-          <div>RAAN: {spaceObject.raanDeg} °</div>
-          <div>Arg. du périgée: {spaceObject.argOfPerigeeDeg} °</div>
-          <div>Anomalie moyenne à l'époque: {spaceObject.meanAnomalyDegAtEpoch} °</div>
-          <div>Époque: {spaceObject.epochIso}</div>
-        </>
+      <div>
+        <strong>{spaceObject.name}</strong>
+      </div>
+      <hr />
+      <div>Description: {spaceObject.description}</div>
+      <div>Demi grand axe: {spaceObject.semiMajorAxisKm} km</div>
+      <div>Eccentricité: {spaceObject.eccentricity}</div>
+      <div>Inclinaison: {spaceObject.inclinationDeg} °</div>
+      <div>RAAN: {spaceObject.raanDeg} °</div>
+      <div>Arg. du périgée: {spaceObject.argOfPerigeeDeg} °</div>
+      <div>Anomalie moyenne à l'époque: {spaceObject.meanAnomalyDegAtEpoch} °</div>
+      <div>Époque: {spaceObject.epochIso}</div>
+
+      <hr />
+
+      <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <input type="checkbox" checked={showOrbit} onChange={(e) => onToggleOrbit(e.target.checked)} />
+          Afficher l’orbite (trait)
+        </label>
+
+        <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <input type="checkbox" checked={showPoints} onChange={(e) => onTogglePoints(e.target.checked)} />
+          Afficher les points de propagation
+        </label>
+      </div>
+
+      {showPoints && propagationParams && (
+        <div
+          style={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+          }}
+        >
+          <label style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span>Début propagation</span>
+            <input
+              type="datetime-local"
+              value={propagationParams.startIso}
+              onChange={(e) =>
+                onChangePropagationParams({
+                  ...propagationParams,
+                  startIso: e.target.value,
+                })
+              }
+            />
+          </label>
+
+          <label style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span>Fin propagation</span>
+            <input
+              type="datetime-local"
+              value={propagationParams.endIso}
+              onChange={(e) =>
+                onChangePropagationParams({
+                  ...propagationParams,
+                  endIso: e.target.value,
+                })
+              }
+            />
+          </label>
+
+          <label
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 4,
+              alignItems: 'center',
+            }}
+          >
+            <span>Pas</span>
+            <input
+              type="number"
+              min={1}
+              style={{ width: 70 }}
+              value={propagationParams.stepValue}
+              onChange={(e) =>
+                onChangePropagationParams({
+                  ...propagationParams,
+                  stepValue: Number(e.target.value) || 1,
+                })
+              }
+            />
+            <select
+              value={propagationParams.stepUnit}
+              onChange={(e) =>
+                onChangePropagationParams({
+                  ...propagationParams,
+                  stepUnit: e.target.value as TimeUnit,
+                })
+              }
+            >
+              <option value="seconds">secondes</option>
+              <option value="minutes">minutes</option>
+              <option value="hours">heures</option>
+            </select>
+          </label>
+        </div>
       )}
     </div>
   );

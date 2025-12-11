@@ -7,18 +7,26 @@ import { getOrbitColor } from '../utils/propagation-helper';
 
 interface PropagationWaypointsVisualizationProps {
   so: SpaceObject;
-  stepMinutes?: number;
-  durationHours?: number;
+  startIso: string;
+  endIso: string;
+  stepSeconds: number;
 }
 
-const PropagationWaypointsVisualization: React.FC<PropagationWaypointsVisualizationProps> = ({ so, stepMinutes = 30, durationHours = 24 }) => {
+const PropagationWaypointsVisualization: React.FC<PropagationWaypointsVisualizationProps> = ({ so, startIso, endIso, stepSeconds }) => {
   const positions = React.useMemo<Cartesian3[]>(() => {
+    const startDate = new Date(startIso);
+    const endDate = new Date(endIso);
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || stepSeconds <= 0) {
+      return [];
+    }
+
     return computePropagationPoints(so, {
-      stepMinutes,
-      durationHours,
-      centerOnEpoch: true,
+      startDate,
+      endDate,
+      stepSeconds,
     });
-  }, [stepMinutes, durationHours, so]);
+  }, [so, startIso, endIso, stepSeconds]);
 
   const orbitColor = getOrbitColor(so.orbitType);
 

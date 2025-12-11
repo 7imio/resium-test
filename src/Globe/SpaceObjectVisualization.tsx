@@ -1,3 +1,5 @@
+// src/Globe/SpaceObjectVisualization.tsx
+
 import { CallbackPositionProperty, Cartesian2, Color, JulianDate, NearFarScalar } from 'cesium';
 import React from 'react';
 import { Entity, PathGraphics } from 'resium';
@@ -6,14 +8,14 @@ import { getOrbitColor, propagateKepler } from '../utils/propagation-helper';
 
 interface SpaceObjectVisualizationProps {
   so: SpaceObject;
+  onClick?: (so: SpaceObject) => void; // ⬅️ nouveau
 }
 
-export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> = ({ so }) => {
+export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> = ({ so, onClick }) => {
   const positionProperty = React.useMemo(
     () =>
       new CallbackPositionProperty((time, result) => {
         const jsDate = time ? JulianDate.toDate(time) : new Date(so.epochIso);
-
         const pos = propagateKepler(so, jsDate);
 
         if (result) {
@@ -35,7 +37,8 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
       id={so.id}
       name={so.name}
       position={positionProperty}
-      //   point={{ pixelSize: 12, color: orbitColor}}
+      // ⬇️ quand on clique sur l’entité, on remonte le SpaceObject
+      onClick={() => onClick?.(so)}
       model={{
         uri: `/Satellites/${so.orbitType as string}.gltf`,
         scale: 5,

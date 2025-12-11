@@ -5,12 +5,11 @@ import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
 import type { SpaceObject } from '../types/spaceObject';
 
 interface UiOverlayProps {
-  showPropagation: boolean;
-  setShowPropagation: React.Dispatch<React.SetStateAction<boolean>>;
   handleFocusSatellite: (so: SpaceObject) => void;
   viewerRef: React.RefObject<CesiumComponentRef<CesiumViewer> | null>;
 }
-const UiOverlay: React.FC<UiOverlayProps> = ({ showPropagation, setShowPropagation, handleFocusSatellite, viewerRef }) => {
+
+const UiOverlay: React.FC<UiOverlayProps> = ({ handleFocusSatellite, viewerRef }) => {
   const [showUi, setShowUi] = useState<boolean>(false);
   const [showDebug, setShowDebug] = useState<boolean>(false);
 
@@ -37,24 +36,20 @@ const UiOverlay: React.FC<UiOverlayProps> = ({ showPropagation, setShowPropagati
       }}
     >
       <button onClick={() => setShowUi(!showUi)}>{showUi ? 'Cacher' : 'Afficher'} UI</button>
-      {showUi && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <label style={{ cursor: 'pointer', padding: 8 }}>
-            <input type="checkbox" checked={showPropagation} onChange={(e) => setShowPropagation(e.target.checked)} style={{ marginRight: 6 }} /> Afficher les
-            propagations
-          </label>
 
+      {showUi && (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <button onClick={() => setShowDebug(!showDebug)}>{showDebug ? 'Cacher' : 'Afficher'} Debug</button>
 
           <div style={{ fontWeight: 600, marginBottom: 4 }}>Focus sur un objet :</div>
 
-          {/* Liste de boutons satellites */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}
+          >
             {mockSpaceObjects.map((so) => (
               <button
                 key={so.id}
@@ -79,5 +74,4 @@ const UiOverlay: React.FC<UiOverlayProps> = ({ showPropagation, setShowPropagati
     </div>
   );
 };
-
 export default UiOverlay;
