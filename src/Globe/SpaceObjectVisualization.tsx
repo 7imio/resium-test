@@ -8,7 +8,7 @@ import { getOrbitColor, propagateKepler } from '../utils/propagation-helper';
 
 interface SpaceObjectVisualizationProps {
   so: SpaceObject;
-  onClick?: (so: SpaceObject) => void; // ⬅️ nouveau
+  onClick?: (so: SpaceObject) => void;
 }
 
 export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> = ({ so, onClick }) => {
@@ -37,7 +37,6 @@ export const SpaceObjectVisualization: React.FC<SpaceObjectVisualizationProps> =
       id={so.id}
       name={so.name}
       position={positionProperty}
-      // ⬇️ quand on clique sur l’entité, on remonte le SpaceObject
       onClick={() => onClick?.(so)}
       model={{
         uri: `/Satellites/${so.orbitType as string}.gltf`,

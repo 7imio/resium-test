@@ -1,4 +1,3 @@
-// src/utils/sample-position.ts
 import { Cartesian3, JulianDate, SampledPositionProperty } from 'cesium';
 import type { SpaceObject } from '../types/spaceObject';
 import { propagateKepler } from './propagation-helper';
@@ -15,7 +14,6 @@ export function buildSampledPositionForOrbit(
 
   const position = new SampledPositionProperty();
 
-  // On prend "maintenant" comme centre de la fenêtre
   const now = new Date();
   const halfDuration = durationSeconds / 2;
 

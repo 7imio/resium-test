@@ -2,6 +2,7 @@
 
 import { Fragment } from 'react';
 import { mockSpaceObjects } from '../mocks/mock-spaceObjects';
+import type { SpaceObject } from '../types/spaceObject';
 import PropagationWaypointsVisualization from './PropagationWaypointsVisualisation';
 import SpaceObjectsPropagations from './SpaceObjectsPropagations';
 import SpaceObjectVisualization from './SpaceObjectVisualization';
@@ -18,7 +19,7 @@ interface EntitiesProps {
     endIso: string;
     stepSeconds: number;
   };
-  onClickSpaceObject?: (so: import('../types/spaceObject').SpaceObject) => void; // ⬅️ nouveau
+  onClickSpaceObject?: (so: SpaceObject) => void;
 }
 
 const Entities: React.FC<EntitiesProps> = ({ perObjectVisibility, activePropagation, onClickSpaceObject }) => {
@@ -32,7 +33,6 @@ const Entities: React.FC<EntitiesProps> = ({ perObjectVisibility, activePropagat
 
         return (
           <Fragment key={so.id}>
-            {/* ⬇️ on passe le callback ici */}
             <SpaceObjectVisualization so={so} onClick={onClickSpaceObject} />
 
             {visibility.showOrbit && <SpaceObjectsPropagations key={`orbit-${so.id}`} so={so} />}

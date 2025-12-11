@@ -20,6 +20,14 @@ const UiOverlay: React.FC<UiOverlayProps> = ({ handleFocusSatellite, viewerRef }
     viewer.scene.debugShowFramesPerSecond = showDebug;
   }, [showDebug]);
 
+  const handleShowUi = () => {
+    setShowUi(!showUi);
+  };
+
+  const handleShowDebug = () => {
+    setShowDebug(!showDebug);
+  };
+
   return (
     <div
       style={{
@@ -35,11 +43,11 @@ const UiOverlay: React.FC<UiOverlayProps> = ({ handleFocusSatellite, viewerRef }
         width: '10rem',
       }}
     >
-      <button onClick={() => setShowUi(!showUi)}>{showUi ? 'Cacher' : 'Afficher'} UI</button>
+      <button onClick={handleShowUi}>{showUi ? 'Cacher' : 'Afficher'} UI</button>
 
       {showUi && (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <button onClick={() => setShowDebug(!showDebug)}>{showDebug ? 'Cacher' : 'Afficher'} Debug</button>
+          <button onClick={handleShowDebug}>{showDebug ? 'Cacher' : 'Afficher'} Debug</button>
 
           <div style={{ fontWeight: 600, marginBottom: 4 }}>Focus sur un objet :</div>
 

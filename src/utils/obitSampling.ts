@@ -2,14 +2,14 @@ import { Cartesian3 } from 'cesium';
 import type { SpaceObject } from '../types/spaceObject';
 import { propagateKepler } from './propagation-helper';
 
-export function computePropagationPoints(
+export const computePropagationPoints = (
   spaceObject: SpaceObject,
   options: {
     startDate: Date;
     endDate: Date;
     stepSeconds: number;
   },
-): Cartesian3[] {
+): Cartesian3[] => {
   const { startDate, endDate, stepSeconds } = options;
 
   const startMs = startDate.getTime();
@@ -29,4 +29,4 @@ export function computePropagationPoints(
   }
 
   return positions;
-}
+};

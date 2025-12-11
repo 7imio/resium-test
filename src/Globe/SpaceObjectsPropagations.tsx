@@ -15,7 +15,8 @@ const SpaceOjectsPropagagions: React.FC<SpaceObjectsPropagationsProps> = ({ so }
     const epoch = new Date(so.epochIso);
     const periodSeconds = computeOrbitalPeriodSeconds(so.semiMajorAxisKm);
 
-    const steps = 256; // résolution
+    const steps = 256;
+    // dt is the time step in seconds for each propagation step
     const dt = periodSeconds / steps;
 
     for (let i = 0; i <= steps; i++) {
