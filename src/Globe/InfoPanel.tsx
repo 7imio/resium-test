@@ -12,14 +12,15 @@ interface PropagationUiParams {
 interface InfoPanelProps {
   selectedEntity: Entity | undefined;
   spaceObject: SpaceObject | undefined;
-
   showOrbit: boolean;
   showPoints: boolean;
   onToggleOrbit: (show: boolean) => void;
   onTogglePoints: (show: boolean) => void;
-
   propagationParams: PropagationUiParams | undefined;
   onChangePropagationParams: (params: PropagationUiParams) => void;
+  onZoomOutFromObject: () => void;
+  onRecenterOnObject: () => void;
+  handleRefocusOnObject: () => void;
 }
 
 const InfoPanel: React.FC<InfoPanelProps> = ({
@@ -30,6 +31,9 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
   onTogglePoints,
   propagationParams,
   onChangePropagationParams,
+  onRecenterOnObject,
+  onZoomOutFromObject,
+  handleRefocusOnObject,
 }) => {
   if (!spaceObject) {
     return null;
@@ -52,6 +56,30 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
     >
       <div>
         <strong>{spaceObject.name}</strong>
+      </div>
+      <hr />
+      {/* Bloc caméra */}
+      <div
+        style={{
+          marginTop: 4,
+          marginBottom: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4,
+        }}
+      >
+        <span style={{ fontWeight: 600 }}>Caméra</span>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button type="button" onClick={onZoomOutFromObject} style={{ flex: 1, fontSize: 12 }}>
+            Zoom vue propagation
+          </button>
+          <button type="button" onClick={onRecenterOnObject} style={{ flex: 1, fontSize: 12 }}>
+            Recentrer
+          </button>
+          <button type="button" onClick={handleRefocusOnObject} style={{ flex: 1, fontSize: 12 }}>
+            Refocus
+          </button>
+        </div>
       </div>
       <hr />
       <div>Description: {spaceObject.description}</div>

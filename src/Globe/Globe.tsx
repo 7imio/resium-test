@@ -1,4 +1,4 @@
-import { Viewer as CesiumViewer, Entity, MapMode2D } from 'cesium';
+import { Viewer as CesiumViewer, Entity, HeadingPitchRange, MapMode2D } from 'cesium';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Viewer, type CesiumComponentRef } from 'resium';
@@ -14,6 +14,8 @@ import {
 import Entities from './Entities';
 import InfoPanel from './InfoPanel';
 import UiOverlay from './UiOverlay';
+
+const PROPAGATION_ZOOM_DELTA = 3_000_000.0; // à ajuster selon l’échelle de ta scène
 
 const Globe: React.FC = () => {
   const [selectedEntity, setSelectedEntity] = useState<Entity | undefined>(undefined);
@@ -35,6 +37,43 @@ const Globe: React.FC = () => {
     );
   }
 
+  const FOCUS_RANGE = 500_000; // distance "proche" pour bien voir le satellite
+  const PROPAGATION_RANGE = 5_000_000; // distance "loin" pour bien voir l'orbite + points
+
+  const handleZoomOutFromObject = () => {
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || !spaceObject) return;
+
+    const entity = viewer.entities.getById(spaceObject.id);
+    if (!entity) return;
+
+    const camera = viewer.camera;
+
+    const offset = new HeadingPitchRange(camera.heading, camera.pitch, PROPAGATION_RANGE);
+
+    viewer.camera.zoomOut(PROPAGATION_ZOOM_DELTA);
+  };
+
+  const handleRecenterOnObject = () => {
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || !spaceObject) return;
+
+    const entity = viewer.entities.getById(spaceObject.id);
+    if (!entity) return;
+
+    const camera = viewer.camera;
+    viewer.camera.zoomIn(PROPAGATION_ZOOM_DELTA);
+  };
+  const handleRefocusOnObject = () => {
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || !spaceObject) return;
+
+    const entity = viewer.entities.getById(spaceObject.id);
+    if (!entity) return;
+
+    // Le refocus se comporte comme un vrai flyTo "centrage parfait"
+    viewer.trackedEntity = entity;
+  };
   const activePropagationConfig: ActivePropagationConfig | undefined = propagationUiParams
     ? (() => {
         const { startIso, endIso, stepValue, stepUnit } = propagationUiParams;
@@ -151,6 +190,9 @@ const Globe: React.FC = () => {
           onTogglePoints={(show) => setPointsVisibility(spaceObject.id, show, setPerObjectVisibility)}
           propagationParams={propagationUiParams}
           onChangePropagationParams={setPropagationUiParams}
+          onZoomOutFromObject={handleZoomOutFromObject}
+          onRecenterOnObject={handleRecenterOnObject}
+          handleRefocusOnObject={handleRefocusOnObject}
         />
       )}
 
